@@ -13,10 +13,10 @@ st.set_page_config(
     page_title="Dashboard Aplikasi Visualisasi 2025 - Auto CSV Loader",
     page_icon="🚀",
     layout="wide",
-    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
+    initial_sidebar_state="collapsed"
 )
 
-# Enhanced CSS for mobile optimization
+# Enhanced CSS for mobile optimization with pure HTML buttons
 def load_css():
     st.markdown("""
     <style>
@@ -70,26 +70,18 @@ def load_css():
             font-size: 1.5rem !important;
         }
         
-        /* Mobile button adjustments */
-        .stButton > button {
-            width: 100% !important;
-            padding: 0.5rem !important;
-            font-size: 0.9rem !important;
+        .action-buttons-row {
+            gap: 0.3rem !important;
         }
         
-        /* Mobile search bar */
-        .stTextInput > div > div > input {
-            font-size: 16px !important; /* Prevents zoom on iOS */
+        .action-btn {
+            padding: 0.4rem 0.6rem !important;
+            font-size: 0.75rem !important;
         }
         
-        /* Mobile sidebar improvements */
-        .css-1d391kg {
-            width: 100% !important;
-        }
-        
-        /* Mobile expander improvements */
-        .streamlit-expanderHeader {
-            font-size: 1rem !important;
+        .primary-btn {
+            padding: 0.6rem !important;
+            font-size: 0.8rem !important;
         }
     }
     
@@ -128,9 +120,10 @@ def load_css():
         padding: 1.5rem;
         box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.3);
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         transition: all 0.3s ease;
         position: relative;
+        overflow: hidden;
     }
     
     .app-card:hover {
@@ -138,65 +131,72 @@ def load_css():
         box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
     }
     
+    .app-header {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        gap: 1rem;
+    }
+    
     .app-icon {
         width: 50px;
         height: 50px;
         border-radius: 12px;
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         font-size: 20px;
         font-weight: bold;
         color: white;
-        margin-right: 1rem;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         flex-shrink: 0;
     }
     
-    .app-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
+    .app-info {
+        flex: 1;
+        min-width: 0;
     }
     
     .app-title {
-        margin: 0;
+        margin: 0 0 0.3rem 0;
         color: #333;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: 600;
+        line-height: 1.2;
     }
     
     .app-category {
         background: #f0f0f0;
-        padding: 0.2rem 0.6rem;
+        padding: 0.25rem 0.7rem;
         border-radius: 12px;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: #666;
         font-weight: 600;
-        margin-top: 0.3rem;
         display: inline-block;
     }
     
     .app-description {
         color: #555;
         line-height: 1.5;
-        margin-bottom: 1rem;
+        margin: 1rem 0;
         font-size: 0.9rem;
     }
     
-    .app-actions {
+    .action-buttons-row {
         display: flex;
         gap: 0.5rem;
         flex-wrap: wrap;
         align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
     }
     
     .action-btn {
         background: #f8f9fa;
         border: 1px solid #dee2e6;
         border-radius: 8px;
-        padding: 0.4rem 0.8rem;
+        padding: 0.5rem 0.8rem;
         font-size: 0.8rem;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -204,20 +204,89 @@ def load_css():
         color: #495057;
         display: inline-flex;
         align-items: center;
+        gap: 0.3rem;
+        font-weight: 500;
+        min-width: fit-content;
+        outline: none;
+        font-family: inherit;
     }
     
     .action-btn:hover {
         background: #e9ecef;
         transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .edit-btn {
+        background: linear-gradient(135deg, #17a2b8, #138496);
+        color: white !important;
+        border: none;
+    }
+    
+    .edit-btn:hover {
+        background: linear-gradient(135deg, #138496, #117a8b);
+        color: white !important;
+    }
+    
+    .delete-btn {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white !important;
+        border: none;
+    }
+    
+    .delete-btn:hover {
+        background: linear-gradient(135deg, #c82333, #a71e2a);
+        color: white !important;
+    }
+    
+    .copy-btn {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white !important;
+        border: none;
+    }
+    
+    .copy-btn:hover {
+        background: linear-gradient(135deg, #5a6268, #495057);
+        color: white !important;
     }
     
     .primary-btn {
-        background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+        background: linear-gradient(135deg, #28a745, #20c997);
         color: white !important;
         border: none;
         flex: 1;
         min-width: 120px;
         justify-content: center;
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .primary-btn:hover {
+        background: linear-gradient(135deg, #20c997, #17a2b8);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        color: white !important;
+    }
+    
+    .primary-btn:disabled {
+        background: #6c757d !important;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        color: #999 !important;
+    }
+    
+    .confirm-btn {
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        color: #212529 !important;
+        border: none;
+        font-weight: 600;
+    }
+    
+    .confirm-btn:hover {
+        background: linear-gradient(135deg, #fd7e14, #dc3545);
+        color: white !important;
     }
     
     /* Color classes */
@@ -317,11 +386,6 @@ def load_css():
         color: #0c5460;
     }
     
-    /* Sidebar improvements for mobile */
-    .css-1lcbmhc {
-        padding-top: 1rem;
-    }
-    
     /* Form improvements */
     .stForm {
         background: #f8f9fa;
@@ -354,22 +418,82 @@ def load_css():
     .stSpinner {
         text-align: center;
     }
+    
+    /* Confirmation dialog styles */
+    .confirm-delete {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+        color: #856404;
+    }
+    
+    /* URL display styles */
+    .url-display {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        font-family: monospace;
+        font-size: 0.8rem;
+        word-break: break-all;
+        color: #495057;
+    }
     </style>
     
     <script>
-    // Add touch-friendly interactions
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add touch feedback for buttons
-        const buttons = document.querySelectorAll('.stButton > button');
-        buttons.forEach(button => {
-            button.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.95)';
-            });
-            button.addEventListener('touchend', function() {
-                this.style.transform = 'scale(1)';
-            });
+    function editApp(appId) {
+        // Trigger Streamlit rerun with edit action
+        window.parent.postMessage({
+            type: 'streamlit:setComponentValue',
+            value: {action: 'edit', appId: appId}
+        }, '*');
+    }
+    
+    function deleteApp(appId) {
+        // Trigger Streamlit rerun with delete action
+        window.parent.postMessage({
+            type: 'streamlit:setComponentValue',
+            value: {action: 'delete', appId: appId}
+        }, '*');
+    }
+    
+    function confirmDelete(appId) {
+        // Trigger Streamlit rerun with confirm delete action
+        window.parent.postMessage({
+            type: 'streamlit:setComponentValue',
+            value: {action: 'confirm_delete', appId: appId}
+        }, '*');
+    }
+    
+    function copyUrl(url) {
+        // Copy URL to clipboard and show notification
+        navigator.clipboard.writeText(url).then(function() {
+            // Show temporary notification
+            const notification = document.createElement('div');
+            notification.className = 'notification info';
+            notification.innerHTML = '✅ URL copied to clipboard!';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }).catch(function() {
+            // Fallback: show URL in a text area for manual copy
+            const urlDisplay = document.createElement('div');
+            urlDisplay.className = 'url-display';
+            urlDisplay.innerHTML = `URL: ${url}`;
+            event.target.parentNode.appendChild(urlDisplay);
+            
+            setTimeout(() => {
+                if (urlDisplay.parentNode) {
+                    urlDisplay.parentNode.removeChild(urlDisplay);
+                }
+            }, 5000);
         });
-    });
+    }
     </script>
     """, unsafe_allow_html=True)
 
@@ -402,6 +526,12 @@ def init_session_state():
     
     if 'notification' not in st.session_state:
         st.session_state.notification = None
+    
+    if 'confirm_delete' not in st.session_state:
+        st.session_state.confirm_delete = None
+    
+    if 'action_clicked' not in st.session_state:
+        st.session_state.action_clicked = None
 
 # Auto-scan for CSV files
 def scan_data_folder():
@@ -509,47 +639,94 @@ def render_notification():
         # Clear notification after displaying
         st.session_state.notification = None
 
-# Mobile-optimized app card
-def render_app_card_mobile(app: Dict[str, Any]):
-    """Render a mobile-optimized app card"""
-    st.markdown(f"""
+# Pure HTML app card with integrated buttons
+def render_app_card_pure_html(app: Dict[str, Any]):
+    """Render app card with pure HTML integrated action buttons"""
+    
+    # Handle delete confirmation state
+    confirm_delete_display = ""
+    if st.session_state.confirm_delete == app['id']:
+        confirm_delete_display = f"""
+        <div class="confirm-delete">
+            ⚠️ Are you sure you want to delete "<strong>{app['name']}</strong>"? 
+        </div>
+        """
+    
+    # Determine button states
+    delete_button_content = "⚠️ Confirm" if st.session_state.confirm_delete == app['id'] else "🗑️ Delete"
+    delete_button_class = "confirm-btn" if st.session_state.confirm_delete == app['id'] else "delete-btn"
+    delete_onclick = f"confirmDelete({app['id']})" if st.session_state.confirm_delete == app['id'] else f"deleteApp({app['id']})"
+    
+    # Main action button
+    if app['url'] != '#' and app['url'].strip():
+        main_button = f'<a href="{app["url"]}" target="_blank" class="action-btn primary-btn">🚀 Buka App</a>'
+    else:
+        main_button = '<button class="action-btn primary-btn" disabled>🚀 Buka App</button>'
+    
+    # Complete app card HTML
+    app_card_html = f"""
     <div class="app-card">
         <div class="app-header">
             <div class="app-icon {app['color']}">{app['icon']}</div>
-            <div style="flex: 1; min-width: 0;">
+            <div class="app-info">
                 <h3 class="app-title">{app['name']}</h3>
                 <span class="app-category">{app['category']}</span>
             </div>
         </div>
         <p class="app-description">{app['description']}</p>
-        <div class="app-actions">
-            <button class="action-btn" onclick="navigator.clipboard.writeText('{app['url']}')">
+        
+        {confirm_delete_display}
+        
+        <div class="action-buttons-row">
+            <button class="action-btn edit-btn" onclick="editApp({app['id']})">
+                ✏️ Edit
+            </button>
+            <button class="action-btn {delete_button_class}" onclick="{delete_onclick}">
+                {delete_button_content}
+            </button>
+            <button class="action-btn copy-btn" onclick="copyUrl('{app['url']}')">
                 📋 Copy
             </button>
-    """, unsafe_allow_html=True)
+            {main_button}
+        </div>
+    </div>
+    """
     
-    # Action buttons in columns for mobile
-    col1, col2, col3 = st.columns([1, 1, 2])
+    st.markdown(app_card_html, unsafe_allow_html=True)
+
+# Handle button clicks
+def handle_button_clicks():
+    """Handle button clicks from JavaScript"""
+    # Check for query parameters or other mechanisms to detect button clicks
+    query_params = st.experimental_get_query_params()
     
-    with col1:
-        if st.button("✏️", key=f"edit_{app['id']}", help="Edit", use_container_width=True):
-            st.session_state.editing_app = app
-            st.rerun()
-    
-    with col2:
-        if st.button("🗑️", key=f"delete_{app['id']}", help="Delete", use_container_width=True):
-            if st.button("⚠️ Confirm", key=f"confirm_delete_{app['id']}", help="Confirm delete"):
-                st.session_state.apps_data = [a for a in st.session_state.apps_data if a['id'] != app['id']]
-                show_notification(f"App '{app['name']}' deleted successfully", "success")
+    if 'action' in query_params and 'appId' in query_params:
+        action = query_params['action'][0]
+        app_id = int(query_params['appId'][0])
+        
+        if action == 'edit':
+            # Find and set app for editing
+            app_to_edit = next((app for app in st.session_state.apps_data if app['id'] == app_id), None)
+            if app_to_edit:
+                st.session_state.editing_app = app_to_edit
+                st.experimental_set_query_params()  # Clear query params
                 st.rerun()
-    
-    with col3:
-        if app['url'] != '#':
-            st.link_button("🚀 Buka App", app['url'], use_container_width=True)
-        else:
-            st.button("🚀 Buka App", disabled=True, use_container_width=True)
-    
-    st.markdown("</div></div>", unsafe_allow_html=True)
+        
+        elif action == 'delete':
+            st.session_state.confirm_delete = app_id
+            st.experimental_set_query_params()  # Clear query params
+            st.rerun()
+        
+        elif action == 'confirm_delete':
+            # Delete the app
+            st.session_state.apps_data = [a for a in st.session_state.apps_data if a['id'] != app_id]
+            st.session_state.confirm_delete = None
+            
+            # Find app name for notification
+            app_name = f"App ID {app_id}"
+            show_notification(f"App '{app_name}' deleted successfully", "success")
+            st.experimental_set_query_params()  # Clear query params
+            st.rerun()
 
 # Mobile sidebar content
 def render_mobile_sidebar():
@@ -651,6 +828,81 @@ def render_mobile_sidebar():
                 show_notification("Reset to default", "success")
                 st.rerun()
 
+# Alternative approach using Streamlit buttons with unique keys
+def render_app_card_with_streamlit_buttons(app: Dict[str, Any]):
+    """Render app card with Streamlit buttons but custom styling"""
+    
+    # App card HTML structure
+    st.markdown(f"""
+    <div class="app-card">
+        <div class="app-header">
+            <div class="app-icon {app['color']}">{app['icon']}</div>
+            <div class="app-info">
+                <h3 class="app-title">{app['name']}</h3>
+                <span class="app-category">{app['category']}</span>
+            </div>
+        </div>
+        <p class="app-description">{app['description']}</p>
+    """, unsafe_allow_html=True)
+    
+    # Show delete confirmation message if needed
+    if st.session_state.confirm_delete == app['id']:
+        st.markdown(f"""
+        <div class="confirm-delete">
+            ⚠️ Are you sure you want to delete "<strong>{app['name']}</strong>"? 
+            Click "Confirm Delete" below to proceed.
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Action buttons using Streamlit but with custom container
+    st.markdown('<div class="action-buttons-row">', unsafe_allow_html=True)
+    
+    # Create columns for better button layout
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+    
+    # Edit button
+    with col1:
+        if st.button("✏️ Edit", key=f"edit_btn_{app['id']}", 
+                    help="Edit this application", use_container_width=True):
+            st.session_state.editing_app = app
+            # Clear any delete confirmations
+            if 'confirm_delete' in st.session_state:
+                st.session_state.confirm_delete = None
+            st.rerun()
+    
+    # Delete button with confirmation
+    with col2:
+        if st.session_state.confirm_delete == app['id']:
+            if st.button("⚠️ Confirm", key=f"confirm_delete_btn_{app['id']}", 
+                        help="Confirm deletion", use_container_width=True, type="primary"):
+                # Remove app from data
+                st.session_state.apps_data = [a for a in st.session_state.apps_data if a['id'] != app['id']]
+                st.session_state.confirm_delete = None
+                show_notification(f"App '{app['name']}' deleted successfully", "success")
+                st.rerun()
+        else:
+            if st.button("🗑️ Delete", key=f"delete_btn_{app['id']}", 
+                        help="Delete this application", use_container_width=True):
+                st.session_state.confirm_delete = app['id']
+                st.rerun()
+    
+    # Copy URL button
+    with col3:
+        if st.button("📋 Copy", key=f"copy_btn_{app['id']}", 
+                    help="Show URL for copying", use_container_width=True):
+            st.code(app['url'], language=None)
+            show_notification("URL displayed above for copying", "info")
+    
+    # Main action button - Open App
+    with col4:
+        if app['url'] != '#' and app['url'].strip():
+            st.link_button("🚀 Buka App", app['url'], use_container_width=True)
+        else:
+            st.button("🚀 Buka App", disabled=True, use_container_width=True, 
+                     help="URL not available")
+    
+    st.markdown('</div></div>', unsafe_allow_html=True)
+
 # Main app
 def main():
     load_css()
@@ -675,16 +927,20 @@ def main():
     render_mobile_sidebar()
     
     # Main content area
-    # Mobile search
-    st.markdown('<div class="mobile-search-container">', unsafe_allow_html=True)
-    search_term = st.text_input("🔍 Search applications...", placeholder="Cari nama app, kategori...", label_visibility="collapsed")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Mobile add button
+    # Mobile search and add button
     col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        search_term = st.text_input("🔍 Search applications...", 
+                                   placeholder="Cari nama app, kategori...", 
+                                   label_visibility="collapsed")
+    
     with col2:
         if st.button("➕ Add App", use_container_width=True):
             st.session_state.show_add_form = True
+            # Clear any delete confirmations
+            if 'confirm_delete' in st.session_state:
+                st.session_state.confirm_delete = None
             st.rerun()
     
     # Statistics - mobile optimized
@@ -718,10 +974,10 @@ def main():
                search_term.lower() in app['description'].lower()
         ]
     
-    # Display apps - single column for mobile
+    # Display apps with integrated action buttons
     if filtered_apps:
         for app in filtered_apps:
-            render_app_card_mobile(app)
+            render_app_card_with_streamlit_buttons(app)
     else:
         st.info("🔍 No applications found matching your search.")
     
@@ -757,7 +1013,7 @@ def main():
                                        placeholder="Q")
                 
                 with col2:
-                    color = st.selectbox("Color",
+                    color = st.selectbox("Color Theme",
                                        options=["streamlit", "machine-learning", "data-science", 
                                               "analytics", "visualization", "dashboard", 
                                               "python", "web-app"],
@@ -790,7 +1046,8 @@ def main():
                                         })
                                         break
                                 show_notification(f"App '{name}' updated successfully", "success")
-                                del st.session_state.editing_app
+                                if 'editing_app' in st.session_state:
+                                    del st.session_state.editing_app
                             else:
                                 # Add new app
                                 max_id = max([app['id'] for app in st.session_state.apps_data], default=0)
@@ -807,22 +1064,58 @@ def main():
                                 show_notification(f"App '{name}' added successfully", "success")
                                 st.session_state.show_add_form = False
                             
+                            # Clear any delete confirmations
+                            if 'confirm_delete' in st.session_state:
+                                st.session_state.confirm_delete = None
                             st.rerun()
                         else:
-                            st.error("Please fill in all required fields")
+                            st.error("Please fill in all required fields (Name, Category, Description, Icon)")
                 
                 with col2:
                     if st.form_submit_button("❌ Cancel", use_container_width=True):
                         if editing_app:
-                            del st.session_state.editing_app
+                            if 'editing_app' in st.session_state:
+                                del st.session_state.editing_app
                         else:
                             st.session_state.show_add_form = False
+                        
+                        # Clear any delete confirmations
+                        if 'confirm_delete' in st.session_state:
+                            st.session_state.confirm_delete = None
                         st.rerun()
     
-    # Mobile floating action button (alternative to sidebar button)
+    # Mobile floating action button for quick access
     if not st.session_state.get('show_add_form', False) and not st.session_state.get('editing_app', None):
         st.markdown("""
-        <div class="mobile-floating-add" onclick="document.querySelector('[data-testid="stSidebar"]').style.display='block'">
+        <style>
+        .floating-sidebar-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(255, 75, 75, 0.4);
+            z-index: 1000;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-sidebar-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(255, 75, 75, 0.5);
+        }
+        </style>
+        
+        <div class="floating-sidebar-btn" title="Open Control Panel">
             ⚙️
         </div>
         """, unsafe_allow_html=True)
@@ -838,7 +1131,13 @@ def main():
             2025 Edition | Optimized for Mobile
         </div>
         <div style="margin-top: 0.5rem; font-size: 0.8rem;">
-            📱 Swipe & Touch Friendly | 🚀 Fast Loading
+            📱 Integrated Actions | 🚀 Touch Friendly
+        </div>
+        <div style="margin-top: 0.3rem; font-size: 0.7rem; opacity: 0.6;">
+            Edit, Delete, Copy & Launch - All in one card
+        </div>
+        <div style="margin-top: 0.3rem; font-size: 0.7rem; color: #28a745;">
+            ✅ Ready to Use | 🎯 Fully Functional
         </div>
     </div>
     """, unsafe_allow_html=True)

@@ -13,26 +13,100 @@ st.set_page_config(
     page_title="Dashboard Aplikasi Visualisasi 2025 - Auto CSV Loader",
     page_icon="🚀",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
 )
 
-# Custom CSS for styling
+# Enhanced CSS for mobile optimization
 def load_css():
     st.markdown("""
     <style>
+    /* Mobile-first responsive design */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-top: 2rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            max-width: 100% !important;
+        }
+        
+        .main-header h1 {
+            font-size: 1.8rem !important;
+            line-height: 1.2 !important;
+        }
+        
+        .main-header p {
+            font-size: 1rem !important;
+        }
+        
+        .streamlit-badge {
+            font-size: 0.8rem !important;
+            padding: 0.3rem 0.8rem !important;
+            margin: 0.2rem !important;
+        }
+        
+        .app-card {
+            padding: 1rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .app-icon {
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 18px !important;
+            margin-right: 0.8rem !important;
+        }
+        
+        .stats-container {
+            flex-direction: column !important;
+            gap: 0.5rem !important;
+        }
+        
+        .stat-item {
+            padding: 1rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem !important;
+        }
+        
+        /* Mobile button adjustments */
+        .stButton > button {
+            width: 100% !important;
+            padding: 0.5rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        /* Mobile search bar */
+        .stTextInput > div > div > input {
+            font-size: 16px !important; /* Prevents zoom on iOS */
+        }
+        
+        /* Mobile sidebar improvements */
+        .css-1d391kg {
+            width: 100% !important;
+        }
+        
+        /* Mobile expander improvements */
+        .streamlit-expanderHeader {
+            font-size: 1rem !important;
+        }
+    }
+    
+    /* Base styles */
     .main-header {
         text-align: center;
-        padding: 2rem 0;
+        padding: 1.5rem 1rem;
         background: linear-gradient(135deg, #FF4B4B 0%, #FF6B6B 50%, #4ECDC4 100%);
         color: white;
-        border-radius: 20px;
-        margin-bottom: 2rem;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
     .main-header h1 {
-        font-size: 3rem !important;
-        margin-bottom: 1rem !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 0.5rem !important;
         text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
     
@@ -40,43 +114,113 @@ def load_css():
         display: inline-block;
         background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
         color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
         font-weight: 600;
-        margin: 0.5rem;
+        margin: 0.3rem;
         box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3);
     }
     
     .app-card {
         background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.3);
         margin-bottom: 1rem;
         transition: all 0.3s ease;
+        position: relative;
     }
     
     .app-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 35px 90px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
     }
     
     .app-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 15px;
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: bold;
         color: white;
         margin-right: 1rem;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        flex-shrink: 0;
     }
     
+    .app-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .app-title {
+        margin: 0;
+        color: #333;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .app-category {
+        background: #f0f0f0;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        color: #666;
+        font-weight: 600;
+        margin-top: 0.3rem;
+        display: inline-block;
+    }
+    
+    .app-description {
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .app-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .action-btn {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        color: #495057;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .action-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+    }
+    
+    .primary-btn {
+        background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+        color: white !important;
+        border: none;
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    /* Color classes */
     .streamlit { background: linear-gradient(135deg, #FF4B4B, #FF6B6B); }
     .machine-learning { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
     .data-science { background: linear-gradient(135deg, #667eea, #764ba2); }
@@ -86,42 +230,73 @@ def load_css():
     .python { background: linear-gradient(135deg, #3776ab, #ffd43b); }
     .web-app { background: linear-gradient(135deg, #61dafb, #21c7f7); }
     
-    .csv-file-item {
-        background: rgba(78, 205, 196, 0.1);
-        border: 1px solid rgba(78, 205, 196, 0.3);
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-    }
-    
     .stats-container {
         display: flex;
         justify-content: space-around;
-        margin: 2rem 0;
-        gap: 1rem;
+        margin: 1.5rem 0;
+        gap: 0.8rem;
     }
     
     .stat-item {
         text-align: center;
         background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
         color: white;
-        padding: 1.5rem;
-        border-radius: 20px;
+        padding: 1.2rem;
+        border-radius: 15px;
         flex: 1;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        min-width: 80px;
     }
     
     .stat-value {
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 800;
         display: block;
+        margin-bottom: 0.3rem;
     }
     
+    .stat-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+    
+    .mobile-search-container {
+        margin-bottom: 1rem;
+    }
+    
+    .mobile-floating-add {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(255, 75, 75, 0.4);
+        z-index: 1000;
+        cursor: pointer;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-floating-add:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 40px rgba(255, 75, 75, 0.5);
+    }
+    
+    /* Notification styles */
     .notification {
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        border-left: 5px solid;
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin: 0.8rem 0;
+        border-left: 4px solid;
+        font-size: 0.9rem;
     }
     
     .notification.success {
@@ -141,7 +316,61 @@ def load_css():
         border-color: #17a2b8;
         color: #0c5460;
     }
+    
+    /* Sidebar improvements for mobile */
+    .css-1lcbmhc {
+        padding-top: 1rem;
+    }
+    
+    /* Form improvements */
+    .stForm {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+    }
+    
+    /* Mobile table improvements */
+    .dataframe {
+        font-size: 0.8rem;
+        overflow-x: auto;
+    }
+    
+    /* Hide scrollbar for cleaner look */
+    .main::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .main::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    .main::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 2px;
+    }
+    
+    /* Loading spinner improvements */
+    .stSpinner {
+        text-align: center;
+    }
     </style>
+    
+    <script>
+    // Add touch-friendly interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add touch feedback for buttons
+        const buttons = document.querySelectorAll('.stButton > button');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    });
+    </script>
     """, unsafe_allow_html=True)
 
 # Initialize session state
@@ -280,78 +509,59 @@ def render_notification():
         # Clear notification after displaying
         st.session_state.notification = None
 
-# Render app card
-def render_app_card(app: Dict[str, Any], col):
-    """Render a single app card"""
-    with col:
-        with st.container():
-            st.markdown(f"""
-            <div class="app-card">
-                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                    <div class="app-icon {app['color']}">{app['icon']}</div>
-                    <div>
-                        <h3 style="margin: 0; color: #333;">{app['name']}</h3>
-                        <span style="background: #f0f0f0; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; color: #666; font-weight: 600;">
-                            {app['category']}
-                        </span>
-                    </div>
-                </div>
-                <p style="color: #555; line-height: 1.6; margin-bottom: 1.5rem;">{app['description']}</p>
+# Mobile-optimized app card
+def render_app_card_mobile(app: Dict[str, Any]):
+    """Render a mobile-optimized app card"""
+    st.markdown(f"""
+    <div class="app-card">
+        <div class="app-header">
+            <div class="app-icon {app['color']}">{app['icon']}</div>
+            <div style="flex: 1; min-width: 0;">
+                <h3 class="app-title">{app['name']}</h3>
+                <span class="app-category">{app['category']}</span>
             </div>
-            """, unsafe_allow_html=True)
-            
-            # Action buttons
-            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-            
-            with col1:
-                if st.button("✏️", key=f"edit_{app['id']}", help="Edit"):
-                    st.session_state.editing_app = app
-                    st.rerun()
-            
-            with col2:
-                if st.button("🗑️", key=f"delete_{app['id']}", help="Delete"):
-                    st.session_state.apps_data = [a for a in st.session_state.apps_data if a['id'] != app['id']]
-                    show_notification(f"App '{app['name']}' deleted successfully", "success")
-                    st.rerun()
-            
-            with col3:
-                if st.button("📋", key=f"copy_{app['id']}", help="Copy URL"):
-                    st.code(app['url'])
-                    show_notification("URL copied to clipboard area", "info")
-            
-            with col4:
-                if app['url'] != '#':
-                    st.link_button("🚀 Buka App", app['url'], use_container_width=True)
-                else:
-                    st.button("🚀 Buka App", disabled=True, use_container_width=True)
-
-# Main app
-def main():
-    load_css()
-    init_session_state()
-    
-    # Header
-    st.markdown("""
-    <div class="main-header">
-        <h1>🚀 Dashboard Streamlit 2025</h1>
-        <div class="streamlit-badge">Auto CSV Loader</div>
-        <div class="streamlit-badge">Machine Learning Apps</div>
-        <p style="font-size: 1.2rem; margin-top: 1rem;">Platform Terpadu dengan Auto-Upload CSV dari Folder Data</p>
-    </div>
+        </div>
+        <p class="app-description">{app['description']}</p>
+        <div class="app-actions">
+            <button class="action-btn" onclick="navigator.clipboard.writeText('{app['url']}')">
+                📋 Copy
+            </button>
     """, unsafe_allow_html=True)
     
-    # Render notifications
-    render_notification()
+    # Action buttons in columns for mobile
+    col1, col2, col3 = st.columns([1, 1, 2])
     
-    # Sidebar
+    with col1:
+        if st.button("✏️", key=f"edit_{app['id']}", help="Edit", use_container_width=True):
+            st.session_state.editing_app = app
+            st.rerun()
+    
+    with col2:
+        if st.button("🗑️", key=f"delete_{app['id']}", help="Delete", use_container_width=True):
+            if st.button("⚠️ Confirm", key=f"confirm_delete_{app['id']}", help="Confirm delete"):
+                st.session_state.apps_data = [a for a in st.session_state.apps_data if a['id'] != app['id']]
+                show_notification(f"App '{app['name']}' deleted successfully", "success")
+                st.rerun()
+    
+    with col3:
+        if app['url'] != '#':
+            st.link_button("🚀 Buka App", app['url'], use_container_width=True)
+        else:
+            st.button("🚀 Buka App", disabled=True, use_container_width=True)
+    
+    st.markdown("</div></div>", unsafe_allow_html=True)
+
+# Mobile sidebar content
+def render_mobile_sidebar():
+    """Render mobile-optimized sidebar"""
     with st.sidebar:
-        st.header("🛠️ Control Panel")
+        st.markdown("### 🛠️ Control Panel")
         
         # Auto CSV Loader Section
-        st.subheader("📁 Auto CSV Loader")
+        st.markdown("#### 📁 Auto CSV Loader")
         
-        if st.button("🔍 Scan Folder Data", use_container_width=True):
-            with st.spinner("Scanning for CSV files..."):
+        if st.button("🔍 Scan Data Folder", use_container_width=True):
+            with st.spinner("Scanning..."):
                 st.session_state.detected_csv_files = scan_data_folder()
                 if st.session_state.detected_csv_files:
                     show_notification(f"Found {len(st.session_state.detected_csv_files)} CSV files", "success")
@@ -359,31 +569,30 @@ def main():
                     show_notification("No CSV files found", "info")
                 st.rerun()
         
-        # Display detected CSV files
+        # Display detected CSV files in compact format
         if st.session_state.detected_csv_files:
-            st.write("**Detected CSV Files:**")
-            for csv_file in st.session_state.detected_csv_files:
-                with st.expander(f"📄 {csv_file['name']}", expanded=False):
-                    st.write(f"**Size:** {csv_file['size']}")
-                    st.write(f"**Modified:** {csv_file['last_modified']}")
-                    st.write(f"**Path:** {csv_file['path']}")
+            st.markdown("**Found CSV Files:**")
+            for i, csv_file in enumerate(st.session_state.detected_csv_files):
+                with st.expander(f"📄 {csv_file['name'][:20]}{'...' if len(csv_file['name']) > 20 else ''}", expanded=False):
+                    st.markdown(f"**Size:** {csv_file['size']}")
+                    st.markdown(f"**Modified:** {csv_file['last_modified']}")
                     
-                    if st.button(f"📤 Load {csv_file['name']}", key=f"load_{csv_file['name']}"):
-                        with st.spinner(f"Loading {csv_file['name']}..."):
+                    if st.button(f"📤 Load", key=f"load_{i}", use_container_width=True):
+                        with st.spinner("Loading..."):
                             new_apps = load_csv_file(csv_file['path'])
                             if new_apps:
                                 st.session_state.apps_data.extend(new_apps)
-                                show_notification(f"Successfully loaded {len(new_apps)} apps from {csv_file['name']}", "success")
+                                show_notification(f"Loaded {len(new_apps)} apps", "success")
                                 st.rerun()
         
         st.divider()
         
         # Manual CSV Upload
-        st.subheader("📤 Manual CSV Upload")
-        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+        st.markdown("#### 📤 Manual Upload")
+        uploaded_file = st.file_uploader("Choose CSV file", type="csv", label_visibility="collapsed")
         
         if uploaded_file is not None:
-            with st.spinner("Processing uploaded CSV..."):
+            with st.spinner("Processing..."):
                 # Save uploaded file temporarily
                 temp_path = f"temp_{uploaded_file.name}"
                 with open(temp_path, "wb") as f:
@@ -398,67 +607,87 @@ def main():
                 
                 if new_apps:
                     st.session_state.apps_data.extend(new_apps)
-                    show_notification(f"Successfully loaded {len(new_apps)} apps from uploaded file", "success")
+                    show_notification(f"Loaded {len(new_apps)} apps", "success")
                     st.rerun()
         
         st.divider()
         
         # Export/Import Controls
-        st.subheader("💾 Data Management")
+        st.markdown("#### 💾 Data Management")
         
-        col1, col2 = st.columns(2)
+        if st.button("📥 Export CSV", use_container_width=True):
+            df = pd.DataFrame(st.session_state.apps_data)
+            csv = df.to_csv(index=False)
+            st.download_button(
+                label="⬇️ Download CSV",
+                data=csv,
+                file_name=f"apps_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
         
-        with col1:
-            if st.button("📥 Export CSV", use_container_width=True):
-                df = pd.DataFrame(st.session_state.apps_data)
-                csv = df.to_csv(index=False)
-                st.download_button(
-                    label="⬇️ Download",
-                    data=csv,
-                    file_name=f"streamlit_apps_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv",
-                    use_container_width=True
-                )
-        
-        with col2:
-            if st.button("🔄 Reset Default", use_container_width=True):
-                if st.button("⚠️ Confirm Reset", key="confirm_reset"):
-                    st.session_state.apps_data = [
-                        {
-                            "id": 1,
-                            "name": "QOE",
-                            "category": "Machine Learning",
-                            "description": "QOE Visualisasi Data Pengukuran Kualitas Layanan 2025",
-                            "url": "https://qoe-app-kendari.streamlit.app/",
-                            "icon": "Q",
-                            "color": "streamlit"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Prima Aksi",
-                            "category": "Machine Learning",
-                            "description": "Visualisasi Target Prima Aksi 2025",
-                            "url": "https://prima-aksi.streamlit.app/",
-                            "icon": "P",
-                            "color": "machine-learning"
-                        }
-                    ]
-                    show_notification("Dashboard reset to default", "success")
-                    st.rerun()
+        if st.button("🔄 Reset to Default", use_container_width=True):
+            if st.button("⚠️ Confirm Reset", key="confirm_reset", use_container_width=True):
+                st.session_state.apps_data = [
+                    {
+                        "id": 1,
+                        "name": "QOE",
+                        "category": "Machine Learning",
+                        "description": "QOE Visualisasi Data Pengukuran Kualitas Layanan 2025",
+                        "url": "https://qoe-app-kendari.streamlit.app/",
+                        "icon": "Q",
+                        "color": "streamlit"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Prima Aksi",
+                        "category": "Machine Learning",
+                        "description": "Visualisasi Target Prima Aksi 2025",
+                        "url": "https://prima-aksi.streamlit.app/",
+                        "icon": "P",
+                        "color": "machine-learning"
+                    }
+                ]
+                show_notification("Reset to default", "success")
+                st.rerun()
+
+# Main app
+def main():
+    load_css()
+    init_session_state()
+    
+    # Mobile-optimized header
+    st.markdown("""
+    <div class="main-header">
+        <h1>🚀 Dashboard Streamlit 2025</h1>
+        <div>
+            <div class="streamlit-badge">Auto CSV Loader</div>
+            <div class="streamlit-badge">ML Apps</div>
+        </div>
+        <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.9;">Platform Terpadu dengan Auto-Upload CSV</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Render notifications
+    render_notification()
+    
+    # Mobile sidebar
+    render_mobile_sidebar()
     
     # Main content area
-    # Search and filter
+    # Mobile search
+    st.markdown('<div class="mobile-search-container">', unsafe_allow_html=True)
+    search_term = st.text_input("🔍 Search applications...", placeholder="Cari nama app, kategori...", label_visibility="collapsed")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Mobile add button
     col1, col2 = st.columns([3, 1])
-    
-    with col1:
-        search_term = st.text_input("🔍 Search applications...", placeholder="Enter app name, category, or description")
-    
     with col2:
-        if st.button("➕ Add New App", use_container_width=True):
+        if st.button("➕ Add App", use_container_width=True):
             st.session_state.show_add_form = True
             st.rerun()
     
-    # Statistics
+    # Statistics - mobile optimized
     categories = list(set(app['category'] for app in st.session_state.apps_data))
     active_apps = sum(1 for app in st.session_state.apps_data if app['url'] != '#')
     
@@ -466,15 +695,15 @@ def main():
     <div class="stats-container">
         <div class="stat-item">
             <span class="stat-value">{len(st.session_state.apps_data)}</span>
-            <span>Total Apps</span>
+            <span class="stat-label">Total Apps</span>
         </div>
         <div class="stat-item">
             <span class="stat-value">{len(categories)}</span>
-            <span>Categories</span>
+            <span class="stat-label">Categories</span>
         </div>
         <div class="stat-item">
             <span class="stat-value">{active_apps}</span>
-            <span>Active</span>
+            <span class="stat-label">Active</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -489,19 +718,14 @@ def main():
                search_term.lower() in app['description'].lower()
         ]
     
-    # Display apps in grid
+    # Display apps - single column for mobile
     if filtered_apps:
-        # Create columns for grid layout
-        cols_per_row = 2
-        for i in range(0, len(filtered_apps), cols_per_row):
-            cols = st.columns(cols_per_row)
-            for j in range(cols_per_row):
-                if i + j < len(filtered_apps):
-                    render_app_card(filtered_apps[i + j], cols[j])
+        for app in filtered_apps:
+            render_app_card_mobile(app)
     else:
-        st.info("🔍 No applications found matching your search criteria.")
+        st.info("🔍 No applications found matching your search.")
     
-    # Add/Edit form modal (using expander as modal alternative)
+    # Add/Edit form - mobile optimized
     if st.session_state.get('show_add_form', False) or st.session_state.get('editing_app', None):
         st.divider()
         
@@ -510,30 +734,30 @@ def main():
         
         with st.expander(f"📝 {title}", expanded=True):
             with st.form("app_form"):
-                col1, col2 = st.columns(2)
+                # Mobile-friendly form layout
+                name = st.text_input("App Name", 
+                                   value=editing_app['name'] if editing_app else "",
+                                   placeholder="e.g., QOE Dashboard")
                 
+                category = st.selectbox("Category", 
+                                      options=["Machine Learning", "Data Science", "Analytics", 
+                                             "Visualization", "Dashboard", "Web App", "Python"],
+                                      index=["Machine Learning", "Data Science", "Analytics", 
+                                           "Visualization", "Dashboard", "Web App", "Python"].index(editing_app['category']) if editing_app else 0)
+                
+                url = st.text_input("Streamlit URL", 
+                                  value=editing_app['url'] if editing_app else "",
+                                  placeholder="https://your-app.streamlit.app/")
+                
+                col1, col2 = st.columns(2)
                 with col1:
-                    name = st.text_input("App Name", 
-                                       value=editing_app['name'] if editing_app else "",
-                                       placeholder="e.g., QOE Dashboard")
-                    
-                    category = st.selectbox("Category", 
-                                          options=["Machine Learning", "Data Science", "Analytics", 
-                                                 "Visualization", "Dashboard", "Web App", "Python"],
-                                          index=["Machine Learning", "Data Science", "Analytics", 
-                                               "Visualization", "Dashboard", "Web App", "Python"].index(editing_app['category']) if editing_app else 0)
-                    
-                    icon = st.text_input("Icon (1 character)", 
+                    icon = st.text_input("Icon (1 char)", 
                                        value=editing_app['icon'] if editing_app else "",
                                        max_chars=1,
                                        placeholder="Q")
                 
                 with col2:
-                    url = st.text_input("Streamlit URL", 
-                                      value=editing_app['url'] if editing_app else "",
-                                      placeholder="https://your-app.streamlit.app/")
-                    
-                    color = st.selectbox("Color Theme",
+                    color = st.selectbox("Color",
                                        options=["streamlit", "machine-learning", "data-science", 
                                               "analytics", "visualization", "dashboard", 
                                               "python", "web-app"],
@@ -543,9 +767,11 @@ def main():
                 
                 description = st.text_area("Description", 
                                          value=editing_app['description'] if editing_app else "",
-                                         placeholder="Detailed description of your Streamlit app...")
+                                         placeholder="App description...",
+                                         height=100)
                 
-                col1, col2, col3 = st.columns([1, 1, 2])
+                # Mobile-friendly form buttons
+                col1, col2 = st.columns(2)
                 
                 with col1:
                     if st.form_submit_button("💾 Save", use_container_width=True):
@@ -593,11 +819,27 @@ def main():
                             st.session_state.show_add_form = False
                         st.rerun()
     
+    # Mobile floating action button (alternative to sidebar button)
+    if not st.session_state.get('show_add_form', False) and not st.session_state.get('editing_app', None):
+        st.markdown("""
+        <div class="mobile-floating-add" onclick="document.querySelector('[data-testid="stSidebar"]').style.display='block'">
+            ⚙️
+        </div>
+        """, unsafe_allow_html=True)
+    
     # Footer
     st.divider()
     st.markdown("""
-    <div style="text-align: center; color: #666; padding: 1rem;">
-        <small>Streamlit Auto-Loader v4.0 | 2025 Edition</small>
+    <div style="text-align: center; color: #666; padding: 1rem; font-size: 0.9rem;">
+        <div style="margin-bottom: 0.5rem;">
+            <strong>Streamlit Auto-Loader v4.0 Mobile</strong>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.8;">
+            2025 Edition | Optimized for Mobile
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+            📱 Swipe & Touch Friendly | 🚀 Fast Loading
+        </div>
     </div>
     """, unsafe_allow_html=True)
 

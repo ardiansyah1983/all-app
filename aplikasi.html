@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aplikasi Streamlit 2025 - Auto CSV Loader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FF4B4B 0%, #FF6B6B 50%, #4ECDC4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #fff, #FFE5B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .streamlit-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .auto-loader-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .auto-loader-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .auto-loader-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .csv-file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .csv-file-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .csv-file-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .csv-file-info {
+            flex: 1;
+        }
+
+        .csv-file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .csv-file-size {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .load-csv-btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .load-csv-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .load-csv-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .controls-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-section {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 25px 18px 55px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 8px 40px rgba(255, 75, 75, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .file-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+            border: none;
+        }
+
+        .control-btn.secondary {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            border: none;
+        }
+
+        .control-btn.tertiary {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            background: linear-gradient(45deg, #FFE5B4, #FFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 32px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 35px 90px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #FF4B4B, #FF6B6B, #4ECDC4, #FFD700);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .app-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-right: 25px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-info h3 {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .app-category {
+            font-size: 0.95rem;
+            color: #666;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .app-description {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        .app-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 15px;
+            background: #f8f9fa;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            background: #e9ecef;
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .open-btn {
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+            color: white;
+            padding: 15px 32px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            box-shadow: 0 8px 25px rgba(255, 75, 75, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .open-btn:hover {
+            background: linear-gradient(135deg, #FF6B6B, #FF4B4B);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 75, 75, 0.4);
+        }
+
+        /* Icon colors */
+        .streamlit {
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+        }
+
+        .machine-learning {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        }
+
+        .data-science {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .analytics {
+            background: linear-gradient(135deg, #ffa726, #fb8c00);
+        }
+
+        .visualization {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .dashboard {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+        }
+
+        .python {
+            background: linear-gradient(135deg, #3776ab, #ffd43b);
+        }
+
+        .web-app {
+            background: linear-gradient(135deg, #61dafb, #21c7f7);
+        }
+
+        .loading-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            max-width: 400px;
+            font-weight: 600;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f) !important;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 45px;
+            border-radius: 25px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #FF4B4B;
+            box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end;
+            margin-top: 35px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .version-info {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.8rem;
+            }
+
+            .controls-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .csv-file-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .app-card {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Dashboard Streamlit 2025</h1>
+            <div class="streamlit-badge">Auto CSV Loader</div>
+            <div class="streamlit-badge">Machine Learning Apps</div>
+            <p>Platform Terpadu dengan Auto-Upload CSV dari Folder Data</p>
+        </div>
+
+        <!-- Auto CSV Loader Section -->
+        <div class="auto-loader-section">
+            <div class="auto-loader-header">
+                <div class="auto-loader-icon">📁</div>
+                <div>
+                    <h3>Auto CSV Loader</h3>
+                    <p>Deteksi otomatis file CSV dari folder Data dan muat aplikasi secara otomatis</p>
+                </div>
+                <button class="control-btn secondary" onclick="scanDataFolder()">
+                    <span class="loading-indicator" id="scanLoader" style="display: none;"></span>
+                    🔍 Scan Folder Data
+                </button>
+            </div>
+            <div class="csv-file-list" id="csvFileList">
+                <!-- CSV files will be listed here -->
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="search-section">
+                <div style="position: relative;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Cari aplikasi Streamlit..." id="searchInput">
+                </div>
+            </div>
+            <div class="file-controls">
+                <button class="control-btn primary" onclick="showAddModal()">
+                    ➕ Tambah App
+                </button>
+                <button class="control-btn secondary" onclick="importFromCSV()">
+                    📤 Import CSV
+                </button>
+                <button class="control-btn tertiary" onclick="exportToCSV()">
+                    📥 Export CSV
+                </button>
+                <button class="control-btn" onclick="resetToDefault()">
+                    🔄 Reset
+                </button>
+                <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVImport(event)">
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-value" id="totalApps">2</span>
+                <span>Total Apps</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="totalCategories">1</span>
+                <span>Kategori</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="activeApps">2</span>
+                <span>Aktif</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid" id="dashboardGrid">
+            <!-- Apps will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="appModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Tambah Aplikasi Streamlit Baru</h2>
+            <form id="appForm">
+                <div class="form-group">
+                    <label for="appName">Nama Aplikasi</label>
+                    <input type="text" id="appName" required placeholder="Contoh: QOE Dashboard">
+                </div>
+                <div class="form-group">
+                    <label for="appCategory">Kategori</label>
+                    <select id="appCategory" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Analytics">Analytics</option>
+                        <option value="Visualization">Visualization</option>
+                        <option value="Dashboard">Dashboard</option>
+                        <option value="Web App">Web App</option>
+                        <option value="Python">Python</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appDescription">Deskripsi</label>
+                    <textarea id="appDescription" required
+                        placeholder="Deskripsi detail aplikasi Streamlit..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="appUrl">URL Streamlit</label>
+                    <input type="url" id="appUrl" placeholder="https://your-app.streamlit.app/">
+                </div>
+                <div class="form-group">
+                    <label for="appIcon">Icon (1 huruf)</label>
+                    <input type="text" id="appIcon" maxlength="1" required placeholder="S">
+                </div>
+                <div class="form-group">
+                    <label for="appColor">Tema Warna</label>
+                    <select id="appColor" required>
+                        <option value="streamlit">Streamlit (Merah)</option>
+                        <option value="machine-learning">Machine Learning (Teal)</option>
+                        <option value="data-science">Data Science (Ungu)</option>
+                        <option value="analytics">Analytics (Orange)</option>
+                        <option value="visualization">Visualization (Pink-Yellow)</option>
+                        <option value="dashboard">Dashboard (Tosca-Pink)</option>
+                        <option value="python">Python (Biru-Kuning)</option>
+                        <option value="web-app">Web App (Biru Muda)</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="version-info">
+        Streamlit Auto-Loader v4.0 | 2025 Edition
+    </div>
+
+    <script>
+        // Default apps data
+        let appsData = [
+            {
+                id: 1,
+                name: "QOE",
+                category: "Machine Learning",
+                description: "QOE Visualisasi Data Pengukuran Kualitas Layanan 2025",
+                url: "https://qoe-app-kendari.streamlit.app/",
+                icon: "Q",
+                color: "streamlit"
+            },
+            {
+                id: 2,
+                name: "Prima Aksi",
+                category: "Machine Learning",
+                description: "Visualisasi Target Prima Aksi 2025",
+                url: "https://prima-aksi.streamlit.app/",
+                icon: "P",
+                color: "machine-learning"
+            }
+        ];
+
+        let editingAppId = null;
+        let detectedCSVFiles = [];
+
+        // Initialize the dashboard
+        function init() {
+            loadFromLocalStorage();
+            renderApps();
+            updateStats();
+            setupEventListeners();
+
+            // Auto-scan for CSV files on startup
+            setTimeout(() => {
+                autoScanDataFolder();
+            }, 1000);
+        }
+
+        // Local Storage functions
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('streamlitDashboardApps', JSON.stringify(appsData));
+            } catch (error) {
+                console.warn('Could not save to localStorage:', error);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('streamlitDashboardApps');
+                if (saved) {
+                    const parsedData = JSON.parse(saved);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        appsData = parsedData;
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not load from localStorage:', error);
+            }
+            return false;
+        }
+
+        // Auto-scan for CSV files in Data folder
+        function autoScanDataFolder() {
+            // Simulate scanning for CSV files in Data folder
+            const simulatedCSVFiles = [
+                {
+                    name: 'streamlit_apps.csv',
+                    size: '2.5 KB',
+                    lastModified: new Date().toLocaleDateString(),
+                    path: './Data/streamlit_apps.csv'
+                },
+                {
+                    name: 'ml_applications.csv',
+                    size: '4.2 KB',
+                    lastModified: new Date(Date.now() - 86400000).toLocaleDateString(),
+                    path: './Data/ml_applications.csv'
+                },
+                {
+                    name: 'data_science_tools.csv',
+                    size: '1.8 KB',
+                    lastModified: new Date(Date.now() - 172800000).toLocaleDateString(),
+                    path: './Data/data_science_tools.csv'
+                }
+            ];
+
+            detectedCSVFiles = simulatedCSVFiles;
+            renderCSVFileList();
+
+            showNotification('🔍 Ditemukan ' + simulatedCSVFiles.length + ' file CSV di folder Data', 'success');
+        }
+
+        // Manual scan for Data folder
+        function scanDataFolder() {
+            const scanLoader = document.getElementById('scanLoader');
+            const scanBtn = event.target;
+
+            scanLoader.style.display = 'inline-block';
+            scanBtn.disabled = true;
+
+            setTimeout(() => {
+                autoScanDataFolder();
+                scanLoader.style.display = 'none';
+                scanBtn.disabled = false;
+            }, 2000);
+        }
+
+        // Render CSV file list
+        function renderCSVFileList() {
+            const csvFileList = document.getElementById('csvFileList');
+
+            if (detectedCSVFiles.length === 0) {
+                csvFileList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; opacity: 0.7;">
+                        📁 Belum ada file CSV yang terdeteksi di folder Data
+                    </div>
+                `;
+                return;
+            }
+
+            csvFileList.innerHTML = detectedCSVFiles.map(file => `
+                <div class="csv-file-item">
+                    <div class="csv-file-info">
+                        <div class="csv-file-name">📄 ${file.name}</div>
+                        <div class="csv-file-size">${file.size} • Modified: ${file.lastModified}</div>
+                    </div>
+                    <button class="load-csv-btn" onclick="loadCSVFile('${file.path}', '${file.name}')">
+                        📤 Load
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Load CSV file from Data folder
+        function loadCSVFile(filePath, fileName) {
+            // Simulate loading CSV file content
+            const sampleCSVData = {
+                'streamlit_apps.csv': `name,category,description,url,icon,color
+"Weather Predictor","Machine Learning","Prediksi cuaca menggunakan ML dengan Streamlit","https://weather-ml.streamlit.app/","W","machine-learning"
+"Sales Dashboard","Analytics","Dashboard analisis penjualan real-time","https://sales-dash.streamlit.app/","S","analytics"
+"Image Classifier","Data Science","Klasifikasi gambar menggunakan CNN","https://img-classifier.streamlit.app/","I","data-science"`,
+                'ml_applications.csv': `name,category,description,url,icon,color
+"Stock Predictor","Machine Learning","Prediksi harga saham dengan LSTM","https://stock-pred.streamlit.app/","$","machine-learning"
+"Sentiment Analyzer","Data Science","Analisis sentimen media sosial","https://sentiment-app.streamlit.app/","😊","data-science"
+"Recommender System","Machine Learning","Sistem rekomendasi produk","https://recommender.streamlit.app/","R","machine-learning"`,
+                'data_science_tools.csv': `name,category,description,url,icon,color
+"Data Explorer","Visualization","Tool eksplorasi dan visualisasi data","https://data-explorer.streamlit.app/","E","visualization"
+"Statistical Calculator","Analytics","Kalkulator statistik interaktif","https://stat-calc.streamlit.app/","📊","analytics"
+"ML Model Trainer","Machine Learning","Platform training model ML","https://ml-trainer.streamlit.app/","🎯","machine-learning"`
+            };
+
+            const csvContent = sampleCSVData[fileName];
+
+            if (!csvContent) {
+                showNotification(`❌ File ${fileName} tidak dapat dibaca`, 'error');
+                return;
+            }
+
+            try {
+                showNotification(`📤 Memuat data dari ${fileName}...`, 'success');
+
+                // Parse CSV content
+                const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+                const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+
+                // Validate headers
+                const requiredHeaders = ['name', 'category', 'description', 'url', 'icon', 'color'];
+                const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
+
+                if (missingHeaders.length > 0) {
+                    showNotification(`❌ Header tidak lengkap di ${fileName}: ${missingHeaders.join(', ')}`, 'error');
+                    return;
+                }
+
+                const importedApps = [];
+                let successCount = 0;
+
+                // Parse data rows
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    try {
+                        const values = parseCSVLine(line);
+
+                        if (values.length !== headers.length) {
+                            continue;
+                        }
+
+                        const app = {};
+                        headers.forEach((header, index) => {
+                            app[header] = values[index] || '';
+                        });
+
+                        // Validate required fields
+                        if (!app.name || !app.category || !app.description || !app.icon || !app.color) {
+                            continue;
+                        }
+
+                        // Check for duplicate names
+                        if (appsData.some(existing => existing.name.toLowerCase() === app.name.toLowerCase()) ||
+                            importedApps.some(imported => imported.name.toLowerCase() === app.name.toLowerCase())) {
+                            continue;
+                        }
+
+                        // Generate new ID
+                        const newId = Math.max(...appsData.map(a => a.id), 0, ...importedApps.map(a => a.id || 0)) + 1;
+
+                        importedApps.push({
+                            id: newId + importedApps.length,
+                            name: app.name.trim(),
+                            category: app.category.trim(),
+                            description: app.description.trim(),
+                            url: app.url.trim() || '#',
+                            icon: app.icon.trim().substring(0, 1).toUpperCase(),
+                            color: app.color.toLowerCase().trim()
+                        });
+
+                        successCount++;
+
+                    } catch (error) {
+                        console.error(`Error parsing line ${i + 1}:`, error);
+                    }
+                }
+
+                // Add imported apps
+                if (importedApps.length > 0) {
+                    appsData = [...appsData, ...importedApps];
+                    saveToLocalStorage();
+                    renderApps();
+                    updateStats();
+                    showNotification(`🎉 Berhasil memuat ${successCount} aplikasi dari ${fileName}`, 'success');
+                } else {
+                    showNotification(`❌ Tidak ada data valid yang dapat dimuat dari ${fileName}`, 'error');
+                }
+
+            } catch (error) {
+                console.error('Error loading CSV file:', error);
+                showNotification(`❌ Gagal memuat file ${fileName}`, 'error');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', handleSearch);
+
+            const appForm = document.getElementById('appForm');
+            appForm.addEventListener('submit', handleAppSubmit);
+
+            // Close modal when clicking outside
+            document.getElementById('appModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function (e) {
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    showAddModal();
+                }
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
+        }
+
+        // Enhanced CSV parsing function
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+
+            result.push(current.trim());
+            return result;
+        }
+
+        // Render all apps
+        function renderApps(apps = appsData) {
+            const grid = document.getElementById('dashboardGrid');
+            grid.innerHTML = '';
+
+            apps.forEach((app, index) => {
+                const card = createAppCard(app);
+                card.style.animationDelay = `${index * 0.1}s`;
+                grid.appendChild(card);
+            });
+        }
+
+        // Create app card element
+        function createAppCard(app) {
+            const card = document.createElement('div');
+            card.className = `app-card ${app.color}`;
+            card.setAttribute('data-name', `${app.name} ${app.category}`.toLowerCase());
+
+            card.innerHTML = `
+                <div class="app-header">
+                    <div class="app-icon ${app.color}">${app.icon}</div>
+                    <div class="app-info">
+                        <h3>${app.name}</h3>
+                        <span class="app-category ${app.color}">${app.category}</span>
+                    </div>
+                </div>
+                <p class="app-description">${app.description}</p>
+                <div class="app-actions">
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="editApp(${app.id})" title="Edit">✏️</button>
+                        <button class="action-btn" onclick="deleteApp(${app.id})" title="Hapus">🗑️</button>
+                        <button class="action-btn" onclick="copyUrl('${app.url}')" title="Copy URL">📋</button>
+                    </div>
+                    <button class="open-btn" onclick="openApp('${app.url}')">Buka App</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Open app in new tab
+        function openApp(url) {
+            if (url && url !== '#') {
+                window.open(url, '_blank');
+                showNotification('🚀 Membuka aplikasi Streamlit...', 'success');
+            } else {
+                showNotification('❌ URL aplikasi belum tersedia', 'error');
+            }
+        }
+
+        // Copy URL to clipboard
+        function copyUrl(url) {
+            if (url && url !== '#') {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('📋 URL berhasil disalin ke clipboard', 'success');
+                }).catch(() => {
+                    showNotification('❌ Gagal menyalin URL', 'error');
+                });
+            } else {
+                showNotification('❌ URL tidak tersedia', 'error');
+            }
+        }
+
+        // Show add modal
+        function showAddModal() {
+            editingAppId = null;
+            document.getElementById('modalTitle').textContent = 'Tambah Aplikasi Streamlit Baru';
+            document.getElementById('appForm').reset();
+            document.getElementById('appModal').style.display = 'flex';
+        }
+
+        // Edit app
+        function editApp(id) {
+            const app = appsData.find(a => a.id === id);
+            if (!app) return;
+
+            editingAppId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Aplikasi Streamlit';
+            document.getElementById('appName').value = app.name;
+            document.getElementById('appCategory').value = app.category;
+            document.getElementById('appDescription').value = app.description;
+            document.getElementById('appUrl').value = app.url;
+            document.getElementById('appIcon').value = app.icon;
+            document.getElementById('appColor').value = app.color;
+            document.getElementById('appModal').style.display = 'flex';
+        }
+
+        // Delete app
+        function deleteApp(id) {
+            const app = appsData.find(a => a.id === id);
+            if (!app) return;
+
+            if (confirm(`Apakah Anda yakin ingin menghapus aplikasi "${app.name}"?`)) {
+                appsData = appsData.filter(a => a.id !== id);
+                saveToLocalStorage();
+                renderApps();
+                updateStats();
+                showNotification('🗑️ Aplikasi berhasil dihapus', 'success');
+            }
+        }
+
+        // Handle app form submit
+        function handleAppSubmit(e) {
+            e.preventDefault();
+
+            const appData = {
+                name: document.getElementById('appName').value.trim(),
+                category: document.getElementById('appCategory').value,
+                description: document.getElementById('appDescription').value.trim(),
+                url: document.getElementById('appUrl').value.trim() || '#',
+                icon: document.getElementById('appIcon').value.toUpperCase().trim(),
+                color: document.getElementById('appColor').value
+            };
+
+            // Validation
+            if (!appData.name || !appData.category || !appData.description || !appData.icon || !appData.color) {
+                showNotification('❌ Semua field harus diisi', 'error');
+                return;
+            }
+
+            if (appData.icon.length !== 1) {
+                showNotification('❌ Icon harus berupa 1 karakter', 'error');
+                return;
+            }
+
+            if (editingAppId) {
+                // Update existing app
+                const index = appsData.findIndex(a => a.id === editingAppId);
+                if (index !== -1) {
+                    appsData[index] = { ...appsData[index], ...appData };
+                    saveToLocalStorage();
+                    renderApps();
+                    updateStats();
+                    showNotification('✅ Aplikasi berhasil diperbarui', 'success');
+                }
+            } else {
+                // Check for duplicate names
+                if (appsData.some(app => app.name.toLowerCase() === appData.name.toLowerCase())) {
+                    showNotification('❌ Nama aplikasi sudah ada', 'error');
+                    return;
+                }
+
+                // Add new app
+                const newId = Math.max(...appsData.map(a => a.id), 0) + 1;
+                appsData.push({ id: newId, ...appData });
+                saveToLocalStorage();
+                renderApps();
+                updateStats();
+                showNotification('🎉 Aplikasi berhasil ditambahkan', 'success');
+            }
+
+            closeModal();
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('appModal').style.display = 'none';
+            editingAppId = null;
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+
+            cards.forEach(card => {
+                const searchData = card.getAttribute('data-name');
+                const description = card.querySelector('.app-description').textContent.toLowerCase();
+
+                if (searchData.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            const categories = [...new Set(appsData.map(app => app.category))];
+            document.getElementById('totalApps').textContent = appsData.length;
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('activeApps').textContent = appsData.filter(app => app.url !== '#').length;
+        }
+
+        // Import from CSV (manual)
+        function importFromCSV() {
+            document.getElementById('csvFileInput').click();
+        }
+
+        // Handle manual CSV import
+        function handleCSVImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                showNotification('❌ File harus berformat CSV', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const csvData = e.target.result;
+                    processCSVData(csvData, file.name);
+                } catch (error) {
+                    console.error('Error reading CSV file:', error);
+                    showNotification(`❌ Gagal membaca file CSV`, 'error');
+                }
+            };
+
+            reader.onerror = function () {
+                showNotification('❌ Gagal membaca file', 'error');
+            };
+
+            reader.readAsText(file, 'UTF-8');
+            event.target.value = '';
+        }
+
+        // Process CSV data
+        function processCSVData(csvData, fileName) {
+            if (!csvData || csvData.trim() === '') {
+                showNotification('❌ File CSV kosong', 'error');
+                return;
+            }
+
+            const lines = csvData.split('\n').filter(line => line.trim() !== '');
+
+            if (lines.length < 2) {
+                showNotification('❌ File CSV harus memiliki header dan minimal 1 baris data', 'error');
+                return;
+            }
+
+            // Parse header
+            const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+
+            // Validate headers
+            const requiredHeaders = ['name', 'category', 'description', 'url', 'icon', 'color'];
+            const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
+
+            if (missingHeaders.length > 0) {
+                showNotification(`❌ Header yang hilang: ${missingHeaders.join(', ')}`, 'error');
+                return;
+            }
+
+            const importedApps = [];
+            let successCount = 0;
+            let errorCount = 0;
+
+            // Parse data rows
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                try {
+                    const values = parseCSVLine(line);
+
+                    if (values.length !== headers.length) {
+                        errorCount++;
+                        continue;
+                    }
+
+                    const app = {};
+                    headers.forEach((header, index) => {
+                        app[header] = values[index] || '';
+                    });
+
+                    // Validate required fields
+                    if (!app.name || !app.category || !app.description || !app.icon || !app.color) {
+                        errorCount++;
+                        continue;
+                    }
+
+                    // Check for duplicate names
+                    if (appsData.some(existing => existing.name.toLowerCase() === app.name.toLowerCase()) ||
+                        importedApps.some(imported => imported.name.toLowerCase() === app.name.toLowerCase())) {
+                        errorCount++;
+                        continue;
+                    }
+
+                    // Generate new ID
+                    const newId = Math.max(...appsData.map(a => a.id), 0, ...importedApps.map(a => a.id || 0)) + 1;
+
+                    importedApps.push({
+                        id: newId + importedApps.length,
+                        name: app.name.trim(),
+                        category: app.category.trim(),
+                        description: app.description.trim(),
+                        url: app.url.trim() || '#',
+                        icon: app.icon.trim().substring(0, 1).toUpperCase(),
+                        color: app.color.toLowerCase().trim()
+                    });
+
+                    successCount++;
+
+                } catch (error) {
+                    console.error(`Error parsing line ${i + 1}:`, error);
+                    errorCount++;
+                }
+            }
+
+            // Show results
+            if (importedApps.length > 0) {
+                appsData = [...appsData, ...importedApps];
+                saveToLocalStorage();
+                renderApps();
+                updateStats();
+
+                let message = `🎉 ${successCount} aplikasi berhasil diimpor`;
+                if (errorCount > 0) {
+                    message += `, ${errorCount} baris diabaikan`;
+                }
+                showNotification(message, 'success');
+            } else {
+                showNotification(`❌ Tidak ada data valid untuk diimpor`, 'error');
+            }
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            try {
+                const headers = ['name', 'category', 'description', 'url', 'icon', 'color'];
+                const csvContent = [
+                    headers.join(','),
+                    ...appsData.map(app =>
+                        headers.map(header => {
+                            const value = app[header] || '';
+                            if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+                                return `"${value.replace(/"/g, '""')}"`;
+                            }
+                            return `"${value}"`;
+                        }).join(',')
+                    )
+                ].join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `streamlit_apps_${new Date().toISOString().split('T')[0]}.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    showNotification('📥 File CSV berhasil diunduh', 'success');
+                } else {
+                    showNotification('❌ Browser tidak mendukung download', 'error');
+                }
+            } catch (error) {
+                console.error('Error exporting CSV:', error);
+                showNotification('❌ Gagal mengekspor CSV', 'error');
+            }
+        }
+
+        // Reset to default
+        function resetToDefault() {
+            if (confirm('Apakah Anda yakin ingin mereset ke aplikasi default? Data saat ini akan hilang.')) {
+                appsData = [
+                    {
+                        id: 1,
+                        name: "QOE",
+                        category: "Machine Learning",
+                        description: "QOE Visualisasi Data Pengukuran Kualitas Layanan 2025",
+                        url: "https://qoe-app-kendari.streamlit.app/",
+                        icon: "Q",
+                        color: "streamlit"
+                    },
+                    {
+                        id: 2,
+                        name: "Prima Aksi",
+                        category: "Machine Learning",
+                        description: "Visualisasi Target Prima Aksi 2025",
+                        url: "https://prima-aksi.streamlit.app/",
+                        icon: "P",
+                        color: "machine-learning"
+                    }
+                ];
+                saveToLocalStorage();
+                renderApps();
+                updateStats();
+                showNotification('🔄 Dashboard berhasil direset ke default', 'success');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.2em;">${type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️'}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            init();
+
+            setTimeout(() => {
+                showNotification('🚀 Dashboard Streamlit dengan Auto-Loader siap digunakan!', 'success');
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

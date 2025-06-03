@@ -2,3 +2,5 @@ name,category,description,url,icon,color
 QOE,Machine Learning,QOE Visualisasi Data Pengukuran Kualitas Layanan 2025,https://qoe-app-kendari.streamlit.app/,Q,Streamlit
 Prima Aksi,Machine Learning,Visualisasi Target Prima Aksi 2025,https://prima-aksi.streamlit.app/,P,Streamlit
 Apstard,Machine Learning,Target Open Shelter dan Remote Site 2025,https://apstard.streamlit.app/,P,Streamlit
+SIMS,Machine Learning,Aplikasi Sebaran Pengguna SFR di Provinsi Sulawesi Tenggara,https://sims-kendari.streamlit.app/,S,Streamlit
+Denda,Machine Learning,Simulasi Perhitungan Dendan terkait Pelanggaran SFR dan APT,https://denda-sfr.streamlit.app/,D,Streamlit
